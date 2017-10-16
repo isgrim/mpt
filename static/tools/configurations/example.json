@@ -4,7 +4,8 @@
       "active": true,
       "chain": true,
       "files": {
-        "1": "01_headline.docx"
+        "1": "01_headline.docx",
+        "1": "03_tables.docx"
       },
       "name": "example_project",
       "path": "/home/www-data/web2py/applications/heimpt/static/tests/example",

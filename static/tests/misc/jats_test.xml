@@ -30,13 +30,14 @@
                         <surname>Miller</surname>
                         <given-names>David</given-names>
                     </name>
-
+                <bio> <p>asdsadsassss</p></bio>
                 </contrib>
                 <contrib contrib-type="editor" corresp="yes" id="editor-1">
                     <name>
                         <surname>Groves</surname>
                         <given-names>Jay </given-names>
                     </name>
+                   
                     <xref ref-type="aff" rid="aff1"/>
                     <xref ref-type="other" rid="par-1"/>
                     <xref ref-type="fn" rid="con5"/>

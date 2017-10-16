@@ -780,7 +780,6 @@ def main():
         pi.all_typesetters = pi.config.get('typesetters')
         #pi.check_applications()
         pi.run()
-    ##print pi.gv.log
 
 
 if __name__ == '__main__':
