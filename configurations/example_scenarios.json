@@ -91,7 +91,7 @@
                 "3": "--set-numbering-values=xref,ref-type,fn,{1:2}"
 
             },
-            "executable": "/home/www-data/web2py/applications/mpt/static/tools/prepare.py"
+            "executable": "/home/www-data/web2py/applications/mpt/static/prepare.py"
         } ,
         "xmlprocess": {
             "arguments": {
@@ -102,13 +102,13 @@
 
 
             },
-            "executable": "/home/www-data/web2py/applications/mpt/static/tools/prepare.py"
+            "executable": "/home/www-data/web2py/applications/mpt/static/prepare.py"
         } ,
         "xmlmerge": {
             "arguments": {
 
             },
-            "executable": "/home/www-data/web2py/applications/mpt/static/tools/merge.py"
+            "executable": "/home/www-data/web2py/applications/mpt/static/merge.py"
         }
       ,
         "xml2fo": {
@@ -119,7 +119,7 @@
               "4":"--out-type=FO"
 
             },
-            "executable": "/home/www-data/web2py/applications/mpt/static/tools/disseminate.py"
+            "executable": "/home/www-data/web2py/applications/mpt/static/disseminate.py"
         },
       "fo2pdf": {
             "arguments": {
@@ -128,7 +128,7 @@
               "3":"--out-type=PDF"
 
             },
-            "executable": "/home/www-data/web2py/applications/mpt/static/tools/disseminate.py"
+            "executable": "/home/www-data/web2py/applications/mpt/static/disseminate.py"
         }
 
 

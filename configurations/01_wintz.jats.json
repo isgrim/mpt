@@ -37,12 +37,12 @@
         "3": "--set-numbering-values=xref,ref-type,fn",
         "4": "--citations-to-references"
       },
-      "executable": "/home/www-data/web2py/applications/heimpt/static/tools/prepare.py"
+      "executable": "/home/wit/projects/heimpt/prepare.py"
     },
     "xmlmerge": {
       "arguments": {
       },
-      "executable": "/home/www-data/web2py/applications/heimpt/static/tools/merge.py"
+      "executable": "/home/wit/projects/heimpt/merge.py"
     }
   }
 }

@@ -38,7 +38,7 @@
     "xmlmerge": {
       "arguments": {
       },
-      "executable": "/usr/local/mpt/static/tools/merge.py"
+      "executable": "/usr/local/mpt/static/merge.py"
     }
   }
 }

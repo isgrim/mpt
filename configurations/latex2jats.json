@@ -118,11 +118,11 @@
         "3": "--set-numbering-values=xref,ref-type,fn",
         "4": "--clean-references"
       },
-      "executable": "/usr/local/mpt/static/tools/prepare.py"
+      "executable": "/usr/local/mpt/static/prepare.py"
     },
     "xmlmerge": {
       "arguments": {},
-      "executable": "/usr/local/mpt/static/tools/merge.py"
+      "executable": "/usr/local/mpt/static/merge.py"
     }
   }
 }

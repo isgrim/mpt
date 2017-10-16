@@ -6,4 +6,4 @@ tests/example/example_project/*
 tools/fop/*
 sessions/*
 editors/metadata/bower_components/*
-tools/plugins/import/omp/settings.json
+plugins/import/omp/settings.json
