@@ -92,6 +92,7 @@ class Prepare(Debuggable):
           A dictionary, where keys are names of command-line elements  such as  and values are theparsed values of those
           elements.
         """
+        print "prepare argv:", sys.argv
         return docopt(__doc__, version='xml 0.1')
 
     def citations_to_references(self):
@@ -548,7 +549,7 @@ class Prepare(Debuggable):
             print
         except IOError as e:
             print e
-            self.debug.print_debug(self, self.XML_FILE_NOT_CREATED)
+            self.debug.print_debug(self, self.gv.XML_FILE_NOT_CREATED)
 
     def run(self):
         """

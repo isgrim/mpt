@@ -241,6 +241,9 @@ class GV(object):
 
             """
             return os.path.isfile(f_path) and os.access(f_path, os.X_OK)
+        # Check if path is a file in the current dir
+        if is_exe(p):
+            return p
 
         fpath, fname = os.path.split(p)
         if fpath:

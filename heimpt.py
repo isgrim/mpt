@@ -55,7 +55,7 @@ import sys
 import shutil
 import uuid
 import inspect
-
+import sh
 
 SEP = os.path.sep
 
@@ -138,7 +138,7 @@ class MPT(Debuggable):
         name = 'heiMPT'
         return name
 
-    def call_typesetter(self, args):
+    def call_typesetter(self, args, interactive=False):
         """Runs  typesetter with given arguments
 
         Creates the execution path for a typesetter or an application and runs it  as a system process. Output,
@@ -149,6 +149,8 @@ class MPT(Debuggable):
         ----------
         args : list
             application arguments in the correct oder.
+        interactive: bool (default False)
+            enable passing input to the typesetter process and return output
 
 
         Returns
@@ -174,11 +176,50 @@ class MPT(Debuggable):
                 self, u"Merging command: file into command:file, can be a problem for some applications")
         #TODO delete
         #self.debug.print_console(self, args_str)
-        m = args_str.strip().split(' ')
-        process = Popen(m, stdout=PIPE)
-        output, err = process.communicate()
-        exit_code = process.wait()
-        return output, err, exit_code
+        final_args = args_str.strip().split(' ')
+
+        def make_interact():
+            def interact(out_char, stdin, process):
+                if type(out_char) != unicode:
+                    if interact.aggregated_str:
+                        print interact.aggregated_str + out_char
+                        try:
+                            out_char = unicode(interact.aggregated_str + out_char, 'utf8')
+                            interact.aggregated_str = None
+                        except UnicodeDecodeError:
+                            interact.aggregated_str += out_char
+                    else:
+                        interact.aggregated_str = out_char
+                        return
+                interact.aggregated_out += out_char
+                if out_char.endswith(u"Found an unhandled reference marker:"):
+                    stdin.put('c\n')
+                    sys.stdout.write(u"Found an unhandled reference marker:")
+                    sys.stdout.flush()
+                    interact.print_out = True
+                if interact.print_out:
+                    sys.stdout.write(out_char)
+                    sys.stdout.flush()
+                #interact.aggregated_out = interact.aggregated_out.join(out_char)
+                # TODO check for prompt
+            interact.print_out = False
+            interact.aggregated_str = None
+            interact.aggregated_out = unicode()
+            return interact
+
+        cmd = sh.Command(final_args[0])
+        if interactive:
+            # Call the typesetter with interact callback
+            process = cmd(*final_args[1:], _out=(make_interact()), _out_bufsize=0, _tty_in=True)
+        else:
+            process = cmd(*final_args[1:])
+
+        # Previous way of calling process using Popen directly
+        #process = Popen(m, stdout=PIPE)
+        #output, err = process.communicate()
+        #exit_code = process.wait()
+        return process.stdout, process.stderr, process.exit_code
+
 
     def arguments_parse(self, t_props):
         """
@@ -331,7 +372,8 @@ class MPT(Debuggable):
             self.gv.log.append(prefix)
             args.append(f_path)
             self.create_output_path(p, p_id,  args, prefix, uid)
-            output, err, exit_code = self.call_typesetter(args)
+            interactive = bool(p['typesetters'].get(p_id).get('interactive'))
+            output, err, exit_code = self.call_typesetter(args, interactive=interactive)
             self.debug.print_debug(self, output.decode('utf-8'))
             p_path = self.organize_output(
                 p,
@@ -414,7 +456,7 @@ class MPT(Debuggable):
 
             else:
                 self.debug.print_debug(
-                    self, self.gv.TYPESETTER_BINARY_IS_UNAVAILABLE)
+                    self, self.gv.TYPESETTER_BINARY_IS_UNAVAILABLE + t_props.get('executable'))
         else:
             self.debug.print_debug(
                 self, self.gv.PROJECT_TYPESETTER_IS_NOT_AVAILABLE)
