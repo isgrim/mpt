@@ -38,7 +38,7 @@ References
 
 
 """
-
+import readline
 
 __author__ = "Dulip Withanage"
 
@@ -180,30 +180,35 @@ class MPT(Debuggable):
 
         def make_interact():
             def interact(out_char, stdin, process):
-                if type(out_char) != unicode:
-                    if interact.aggregated_str:
-                        print interact.aggregated_str + out_char
+                if isinstance(out_char, str):
+                    # Non unicode char
+                    if interact.aggregated_char:
                         try:
-                            out_char = unicode(interact.aggregated_str + out_char, 'utf8')
-                            interact.aggregated_str = None
+                            out_char = unicode(interact.aggregated_char + out_char, 'utf8')
+                            interact.aggregated_char = None
                         except UnicodeDecodeError:
-                            interact.aggregated_str += out_char
+                            # Can't decode yet, the combined bytes do not yet represent a unicode character
+                            # Store for later and wait for more characters
+                            interact.aggregated_char += out_char
+                            return
                     else:
-                        interact.aggregated_str = out_char
+                        interact.aggregated_char = out_char
                         return
                 interact.aggregated_out += out_char
-                if out_char.endswith(u"Found an unhandled reference marker:"):
-                    stdin.put('c\n')
-                    sys.stdout.write(u"Found an unhandled reference marker:")
+                if interact.aggregated_out.endswith(u"Found an unhandled reference marker:") and not interact.print_out:
+                    # Show context
+                    #stdin.put('c\n')
+                    sys.stdout.write(u"Found an unhandled reference marker")
                     sys.stdout.flush()
                     interact.print_out = True
                 if interact.print_out:
                     sys.stdout.write(out_char)
                     sys.stdout.flush()
-                #interact.aggregated_out = interact.aggregated_out.join(out_char)
-                # TODO check for prompt
+                if interact.aggregated_out.endswith(u"ontext?"):
+                    user_input = raw_input('')
+                    stdin.put(user_input + '\n')
             interact.print_out = False
-            interact.aggregated_str = None
+            interact.aggregated_char = None
             interact.aggregated_out = unicode()
             return interact
 
@@ -215,9 +220,9 @@ class MPT(Debuggable):
             process = cmd(*final_args[1:])
 
         # Previous way of calling process using Popen directly
-        #process = Popen(m, stdout=PIPE)
-        #output, err = process.communicate()
-        #exit_code = process.wait()
+        # process = Popen(m, stdout=PIPE)
+        # output, err = process.communicate()
+        # exit_code = process.wait()
         return process.stdout, process.stderr, process.exit_code
 
 
